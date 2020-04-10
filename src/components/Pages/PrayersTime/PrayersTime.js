@@ -6,7 +6,7 @@ const PrayersTime = ({
   loading,
   prayerTime,
   handlePrayerSubmit,
-  handlePrayerTimeChange
+  handlePrayerTimeChange,
 }) => {
   const btnClasses = "ui form ";
   return (
@@ -14,14 +14,14 @@ const PrayersTime = ({
       style={{
         padding: "0 2em",
         marginBottom: "10em",
-        borderLeft: "1px solid #eee"
+        borderLeft: "1px solid #eee",
       }}
     >
       <h2
         style={{
           borderBottom: "1px solid #eee",
           padding: "1em 0",
-          color: "#006516"
+          color: "#006516",
         }}
       >
         Prayers Time
@@ -31,14 +31,14 @@ const PrayersTime = ({
         style={{ padding: "1em" }}
       >
         {prayerTime.length > 0 &&
-          prayerTime.map(({ id, prayerName, time }) => (
+          prayerTime.map(({ id, name, time }) => (
             <Form.Field key={id}>
-              <label>{prayerName}</label>
+              <label>{name}</label>
               <input
-                name={prayerName}
-                id={prayerName}
+                name={name}
+                id={id}
                 value={time}
-                onChange={e => handlePrayerTimeChange(e, id)}
+                onChange={(e) => handlePrayerTimeChange(e, id)}
                 type="time"
               />
             </Form.Field>

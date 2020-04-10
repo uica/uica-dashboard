@@ -13,32 +13,34 @@ function App() {
     error: false,
     show: false,
     header: "",
-    content: ""
+    content: "",
   });
   const [activeNav, setActiveNav] = useState("prayers");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/prayers")
-      .then(({ data }) => {
+      .get(`${process.env.REACT_APP_API_URL}/prayers`)
+      .then(({ data: { data } }) => {
         setPrayersTime(data);
       })
-      .catch(error => console.log("Get Prayers Failed", error));
+      .catch((error) => console.log("Get Prayers Failed", error));
   }, []);
 
   const handleNavChange = (e, { name }) => setActiveNav(name);
 
   const handlePrayerSubmit = async () => {
     setLoading(true);
-    const { data } = await axios
-      .post("http://localhost:5000/api/prayers", prayersTime)
-      .catch(error => {
+    const {
+      data: { data },
+    } = await axios
+      .post(`${process.env.REACT_APP_API_URL}/prayers`, prayersTime)
+      .catch((error) => {
         setMessage({
           error: true,
           show: true,
           header: "Failed",
-          content: "Your new prayers time was not submitted, try again!"
+          content: "Your new prayers time was not submitted, try again!",
         });
         console.log(error);
       });
@@ -47,7 +49,7 @@ function App() {
       error: false,
       show: true,
       header: "Time Submitted",
-      content: "Your new prayers time has been changed successfully!"
+      content: "Your new prayers time has been changed successfully!",
     });
     setLoading(false);
     setTimeout(() => {
@@ -55,13 +57,13 @@ function App() {
         error: false,
         show: false,
         header: "",
-        content: ""
+        content: "",
       });
     }, 6000);
   };
 
   const handlePrayerTimeChange = ({ target }, id) => {
-    const newPrayersTime = prayersTime.map(p => {
+    const newPrayersTime = prayersTime.map((p) => {
       if (p.id === id) {
         p.time = target.value;
         return p;
