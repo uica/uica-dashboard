@@ -1,37 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Message } from "semantic-ui-react";
+import axios from "axios";
+import PageContainer from "../../utils/PageContainer";
+const PrayersTime = (props) => {
+  const [prayersTime, setPrayersTime] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({
+    error: false,
+    show: false,
+    header: "",
+    content: "",
+  });
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/prayers`)
+      .then(({ data: { data } }) => {
+        setPrayersTime(data);
+      })
+      .catch((error) => console.log("Get Prayers Failed", error));
+  }, []);
 
-const PrayersTime = ({
-  message,
-  loading,
-  prayerTime,
-  handlePrayerSubmit,
-  handlePrayerTimeChange,
-}) => {
+  const handlePrayerTimeChange = ({ target }, id) => {
+    const newPrayersTime = prayersTime.map((p) => {
+      if (p.id === id) {
+        p.time = target.value;
+        return p;
+      }
+      return p;
+    });
+    setPrayersTime(newPrayersTime);
+  };
+
+  const handlePrayerSubmit = async () => {
+    setLoading(true);
+    const {
+      data: { data },
+    } = await axios
+      .post(`${process.env.REACT_APP_API_URL}/prayers`, prayersTime)
+      .catch((error) => {
+        setMessage({
+          error: true,
+          show: true,
+          header: "Failed",
+          content: "Your new prayers time was not submitted, try again!",
+        });
+        console.log(error);
+      });
+    setPrayersTime(data);
+    setMessage({
+      error: false,
+      show: true,
+      header: "Time Submitted",
+      content: "Your new prayers time has been changed successfully!",
+    });
+    setLoading(false);
+    setTimeout(() => {
+      setMessage({
+        error: false,
+        show: false,
+        header: "",
+        content: "",
+      });
+    }, 6000);
+  };
+
   const btnClasses = "ui form ";
   return (
-    <div
-      style={{
-        padding: "0 2em",
-        marginBottom: "10em",
-        borderLeft: "1px solid #eee",
-      }}
-    >
-      <h2
-        style={{
-          borderBottom: "1px solid #eee",
-          padding: "1em 0",
-          color: "#006516",
-        }}
-      >
-        Prayers Time
-      </h2>
+    <PageContainer title="Prayers Time">
       <Form
         className={!loading ? btnClasses : btnClasses + "loading"}
         style={{ padding: "1em" }}
       >
-        {prayerTime.length > 0 &&
-          prayerTime.map(({ id, name, time }) => (
+        {prayersTime.length > 0 &&
+          prayersTime.map(({ id, name, time }) => (
             <Form.Field key={id}>
               <label>{name}</label>
               <input
@@ -65,7 +106,7 @@ const PrayersTime = ({
           </Message>
         )}
       </Form>
-    </div>
+    </PageContainer>
   );
 };
 

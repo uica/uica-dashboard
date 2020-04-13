@@ -2,23 +2,10 @@ import React from "react";
 import { Item, Label } from "semantic-ui-react";
 import pckJson from "../../../../package.json";
 import uicaLogo from "../../../assets/UICATransparent.png";
-const About = props => {
+import PageContainer from "../../utils/PageContainer";
+const About = (props) => {
   return (
-    <div
-      style={{
-        padding: "0 2em",
-        borderLeft: "1px solid #eee"
-      }}
-    >
-      <h2
-        style={{
-          borderBottom: "1px solid #eee",
-          padding: "1em 0",
-          color: "#006516"
-        }}
-      >
-        About
-      </h2>
+    <PageContainer title="About">
       <Item.Group divided>
         <Item>
           <Item.Image size="tiny" src={uicaLogo} />
@@ -35,7 +22,7 @@ const About = props => {
           </Item.Content>
         </Item>
       </Item.Group>
-    </div>
+    </PageContainer>
   );
 };
 
